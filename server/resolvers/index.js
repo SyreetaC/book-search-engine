@@ -1,2 +1,16 @@
 // define resolvers for the queries and mutations
-//const resolvers = {}
+const me = require("./getSingleUser");
+const login = require("./login");
+const createUser = require("./createUser");
+const saveBook = require("./saveBook");
+const deleteBook = require("./deleteBook");
+const { User } = require("../models/User");
+
+const resolvers = {
+  Query: {
+    me,
+  },
+  Mutation: { createUser, login, saveBook, deleteBook },
+};
+
+module.exports = resolvers;
