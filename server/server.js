@@ -1,9 +1,7 @@
 const express = require("express");
+const { ApolloServer } = require("apollo-server-express");
 const path = require("path");
 
-//got rid of routes
-
-const { ApolloServer } = require("apollo-server");
 const db = require("./config/connection");
 
 const typeDefs = require("./schema");
@@ -28,14 +26,15 @@ const server = new ApolloServer({
   context,
 });
 
-db.once("open", () => {
-  app.listen(PORT, () =>
-    console.log(`🌍 Now listening on https://localhost:${PORT}`)
-  );
-});
+const startServer = async () => {
+  await server.start();
+  server.applyMiddleware({ app });
+};
+
+startServer();
 
 db.once("open", () => {
-  server.listen().then(({ url }) => {
-    console.log(`🌍 Server ready at ${url}`);
+  app.listen(PORT, () => {
+    console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
   });
 });
