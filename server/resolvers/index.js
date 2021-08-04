@@ -1,2 +1,2 @@
-// queries and mutations to go in here
+// define resolvers for the queries and mutations
 //const resolvers = {}
