@@ -4,7 +4,6 @@ const login = require("./login");
 const createUser = require("./createUser");
 const saveBook = require("./saveBook");
 const deleteBook = require("./deleteBook");
-const { User } = require("../models/User");
 
 const resolvers = {
   Query: {
