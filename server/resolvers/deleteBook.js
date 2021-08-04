@@ -1,5 +1,13 @@
-const deleteBook = () => {
-  console.log("Delete book");
+const { AuthenticationError } = require("apollo-server");
+const { User } = require("../models/User");
+
+const deleteBook = async (_, { bookId }, context) => {
+  if (context.user) {
+    const userRemovedBook = await User.findOneAndUpdate({});
+    return userRemovedBook;
+  } else {
+    throw new AuthenticationError("You must be logged in to save a book. ");
+  }
 };
 
 module.exports = deleteBook;

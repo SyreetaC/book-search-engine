@@ -5,8 +5,9 @@ const saveBook = async (_, { savedBook }, context) => {
   if (context.user) {
     const updatedUserBook = await User.findOneAndUpdate({});
     return updatedUserBook;
-  } else
+  } else {
     throw new AuthenticationError("You must be logged in to save a book. ");
+  }
 };
 
 module.exports = saveBook;
