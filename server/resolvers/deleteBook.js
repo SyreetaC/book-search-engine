@@ -6,7 +6,7 @@ const deleteBook = async (_, { bookId }, context) => {
     const userRemovedBook = await User.findOneAndUpdate({});
     return userRemovedBook;
   } else {
-    throw new AuthenticationError("You must be logged in to save a book. ");
+    throw new AuthenticationError("You must be logged in to delete a book. ");
   }
 };
 
