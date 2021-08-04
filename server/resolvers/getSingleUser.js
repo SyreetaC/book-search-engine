@@ -7,7 +7,7 @@ const getSingleUser = async (_, { input }, context) => {
       username,
       email,
       password,
-    }).populate("user");
+    }).populate("user"); //made up
     return foundUser;
   } else {
     throw new AuthenticationError("Not logged in");
