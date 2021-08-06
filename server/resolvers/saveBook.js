@@ -5,13 +5,13 @@ const saveBook = async (_, { input }, context) => {
   if (context.user) {
     const { bookId, authors, title, description, image } = input;
     const updatedUserBook = await User.findOneAndUpdate(
-      { _id: context.user._id },
+      { _id: context.user.id },
       {
         $addToSet: {
           savedBooks: { bookId, authors, title, description, image },
         },
       },
-      { new: true, runValidators: true }
+      { new: true }
     );
     return updatedUserBook;
   } else {

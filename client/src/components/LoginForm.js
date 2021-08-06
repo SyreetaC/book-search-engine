@@ -24,7 +24,7 @@ const LoginForm = () => {
     },
 
     onError: (error) => {
-      console.log(error.message);
+      console.log(error);
       throw new Error("Something went wrong!");
     },
   });
@@ -51,6 +51,7 @@ const LoginForm = () => {
     }
 
     setUserFormData({
+      username: "",
       email: "",
       password: "",
     });
