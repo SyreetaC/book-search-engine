@@ -1,21 +1,31 @@
-const { AuthenticationError } = require("apollo-server");
-const { User } = require("../models/User");
+const { AuthenticationError } = require("apollo-server-express");
+
+const { User } = require("../models");
 
 const saveBook = async (_, { input }, context) => {
+  // check if the user is in context
   if (context.user) {
-    const { bookId, authors, title, description, image } = input;
-    const updatedUserBook = await User.findOneAndUpdate(
-      { _id: context.user.id },
+    // get the user id from the user object
+    const { id } = context.user;
+
+    // find a user by ID and push the book to save to saveBooks array
+    const user = await User.findByIdAndUpdate(
+      id,
       {
-        $addToSet: {
-          savedBooks: { bookId, authors, title, description, image },
+        $push: {
+          savedBooks: input,
         },
       },
       { new: true }
+    ).populate("savedBooks");
+
+    return user;
+  }
+  // if user is not in the context throw error
+  else {
+    throw new AuthenticationError(
+      "You are not authorised to perform this operation"
     );
-    return updatedUserBook;
-  } else {
-    throw new AuthenticationError("You must be logged in to save a book. ");
   }
 };
 

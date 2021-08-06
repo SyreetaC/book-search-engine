@@ -1,9 +1,9 @@
-import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
+import { useMutation } from "@apollo/client";
 import { Form, Button, Alert } from "react-bootstrap";
 
-import { SIGNUP } from "../mutations";
 import Auth from "../utils/auth";
+import { SIGNUP } from "../mutations";
 
 const SignupForm = () => {
   // set initial form state
@@ -17,15 +17,19 @@ const SignupForm = () => {
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
 
-  const [createUser, { data, error, loading }] = useMutation(SIGNUP, {
-    onCompleted: async (data) => {
-      const { token, user } = data.createUser;
+  // use mutation hook for the addUser mutation and pass functions to handle success and error
+  const [createUser] = useMutation(SIGNUP, {
+    onCompleted: (data) => {
+      // get the token and user from the graphQL data response for login mutation
+      const { token, user } = data.addUser;
       console.log(user);
+
+      // use this method to save the token in local storage
       Auth.login(token);
     },
     onError: (error) => {
       console.log(error.message);
-      throw new Error("Something went wrong!");
+      throw new Error("something went wrong!");
     },
   });
 
@@ -45,6 +49,7 @@ const SignupForm = () => {
     }
 
     try {
+      // use the function to pass in the variables which will execute the mutation
       await createUser({
         variables: {
           createUserInput: userFormData,

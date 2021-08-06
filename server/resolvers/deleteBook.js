@@ -1,25 +1,32 @@
-const { AuthenticationError } = require("apollo-server");
-const { User } = require("../models/User");
+const { AuthenticationError } = require("apollo-server-express");
 
-const deleteBook = async (_, { bookId }, context) => {
+const { User } = require("../models");
+
+const removeBook = async (_, { bookId }, context) => {
+  // check if the user is in context
   if (context.user) {
-    const userRemovedBook = await User.findOneAndUpdate({});
-    return userRemovedBook;
-  } else {
-    throw new AuthenticationError("You must be logged in to delete a book. ");
+    // get the user id from the user object
+    const { id } = context.user;
+
+    // find a user by ID and pull the book to remove from saveBooks array
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          savedBooks: { bookId },
+        },
+      },
+      { new: true }
+    ).populate("savedBooks");
+
+    return user;
+  }
+  // if user is not in the context throw error
+  else {
+    throw new AuthenticationError(
+      "You are not authorised to perform this operation"
+    );
   }
 };
 
-module.exports = deleteBook;
-
-// async deleteBook({ user, params }, res) {
-//   const updatedUser = await User.findOneAndUpdate(
-//     { _id: user._id },
-//     { $pull: { savedBooks: { bookId: params.bookId } } },
-//     { new: true }
-//   );
-//   if (!updatedUser) {
-//     return res.status(404).json({ message: "Couldn't find user with this id!" });
-//   }
-//   return res.json(updatedUser);
-// },
+module.exports = removeBook;

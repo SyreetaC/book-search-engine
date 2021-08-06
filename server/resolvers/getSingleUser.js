@@ -1,13 +1,10 @@
 const { User } = require("../models");
 
-const getSingleUser = async (_, { input }, context) => {
+const getSingleUser = async (_, args, context) => {
   if (context.user) {
-    const { email, username, password } = input;
-    const foundUser = await User.findOne({
-      username,
-      email,
-      password,
-    }).populate("user"); //made up
+    const foundUser = await User.findById(context.user.id).populate(
+      "savedBooks"
+    );
     return foundUser;
   } else {
     throw new AuthenticationError("Not logged in");
