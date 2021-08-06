@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 
 import { LOGIN } from "../mutations";
-import { loginUser } from "../utils/API";
 import Auth from "../utils/auth";
 
 const LoginForm = () => {
@@ -12,21 +11,23 @@ const LoginForm = () => {
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setUserFormData({ ...userFormData, [name]: value });
+  };
+
   const [login, { data, error, loading }] = useMutation(LOGIN, {
     onCompleted: (data) => {
       const { token, user } = data.login;
       console.log(user);
       Auth.login(token);
     },
+
     onError: (error) => {
       console.log(error.message);
+      throw new Error("Something went wrong!");
     },
   });
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setUserFormData({ ...userFormData, [name]: value });
-  };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -50,7 +51,6 @@ const LoginForm = () => {
     }
 
     setUserFormData({
-      username: "",
       email: "",
       password: "",
     });

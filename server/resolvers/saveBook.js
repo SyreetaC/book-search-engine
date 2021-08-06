@@ -1,9 +1,18 @@
 const { AuthenticationError } = require("apollo-server");
 const { User } = require("../models/User");
 
-const saveBook = async (_, { savedBook }, context) => {
+const saveBook = async (_, { input }, context) => {
   if (context.user) {
-    const updatedUserBook = await User.findOneAndUpdate({});
+    const { bookId, authors, title, description, image } = input;
+    const updatedUserBook = await User.findOneAndUpdate(
+      { _id: context.user._id },
+      {
+        $addToSet: {
+          savedBooks: { bookId, authors, title, description, image },
+        },
+      },
+      { new: true, runValidators: true }
+    );
     return updatedUserBook;
   } else {
     throw new AuthenticationError("You must be logged in to save a book. ");
@@ -11,18 +20,3 @@ const saveBook = async (_, { savedBook }, context) => {
 };
 
 module.exports = saveBook;
-
-// async saveBook({ user, body }, res) {
-//   console.log(user);
-//   try {
-//     const updatedUser = await User.findOneAndUpdate(
-//       { _id: user._id },
-//       { $addToSet: { savedBooks: body } },
-//       { new: true, runValidators: true }
-//     );
-//     return res.json(updatedUser);
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(400).json(err);
-//   }
-// },
