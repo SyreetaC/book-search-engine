@@ -21,7 +21,7 @@ const SignupForm = () => {
   const [createUser] = useMutation(SIGNUP, {
     onCompleted: (data) => {
       // get the token and user from the graphQL data response for login mutation
-      const { token, user } = data.addUser;
+      const { token, user } = data.createUser;
       console.log(user);
 
       // use this method to save the token in local storage
