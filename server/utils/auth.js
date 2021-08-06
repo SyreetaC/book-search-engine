@@ -1,14 +1,14 @@
 const jwt = require("jsonwebtoken");
 
-process.env.JWT_SECRET || "my local secret";
-process.env.EXP_TIME || "1h";
+const secret = process.env.JWT_SECRET || "my local secret";
+const expiry = process.env.EXP_TIME || "1h";
 
 const signToken = (payload) => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: EXP_TIME });
+  return jwt.sign(payload, secret, { expiresIn: expiry });
 };
 
 const verifyToken = (token) => {
-  return jwt.verify(token, JWT_SECRET, { maxAge: EXP_TIME });
+  return jwt.verify(token, secret, { maxAge: expiry });
 };
 
 module.exports = { signToken, verifyToken };
